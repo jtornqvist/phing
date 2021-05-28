@@ -234,6 +234,7 @@
                 <ref name="chmod"/>
                 <ref name="chown"/>
                 <ref name="condition"/>
+                <ref name="configuration"/>
                 <ref name="copy"/>
                 <ref name="delete"/>
                 <ref name="defaultexcludes"/>
@@ -1438,6 +1439,47 @@
                     <ref name="conditions"/>
                 </choice>
             </optional>
+        </element>
+    </define>
+
+    <define name="configuration">
+        <element name="configuration">
+            <optional>
+                <attribute name="application" a:defaultValue="Application Config"/>
+            </optional>
+            <attribute name="outputdir">
+                <data type="string"/>
+            </attribute>
+            <attribute name="outputfile">
+                <data type="string"/>
+            </attribute>
+            <optional>
+                <attribute name="backup" a:defaultValue="true"/>
+            </optional>
+            <optional>
+                <attribute name="backupprefixformat" a:defaultValue="Ymd_his"/>
+            </optional>
+        </element>
+        <element name="merge">
+            <attribute name="type">
+                <choice>
+                    <value type="string">union</value>
+                    <value type="string">intersection</value>
+                    <value type="string">difference</value>
+                </choice>
+            </attribute>
+            <optional>
+                <attribute name="prompt">
+                    <choice>
+                        <value type="string">union</value>
+                        <value type="string">intersection</value>
+                        <value type="string">difference</value>
+                    </choice>
+                </attribute>
+            </optional>
+            <oneOrMore>
+                <ref name="filelist"/>
+            </oneOrMore>
         </element>
     </define>
 
