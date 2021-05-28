@@ -2,13 +2,16 @@
 
 namespace Phing\Task\System\Properties\Merge;
 
-use Phing\Io\File;
-use Phing\Io\IOException;
 use Phing\Task\System\Properties\Factory as IPropertiesFactory;
 use Phing\Task\System\Properties\KeyValueCollection;
 use Phing\Task\System\Properties\Prompt\Prompt;
 use Phing\Task\System\Properties\Property;
 
+/**
+ * Class MergePropertiesFactory.
+ *
+ * @author Joakim Törnqvist <jocke@tornqvistarna.se>
+ */
 class MergePropertiesFactory implements Factory
 {
     /**
@@ -36,29 +39,25 @@ class MergePropertiesFactory implements Factory
         $this->Prompt = $Prompt;
     }
 
-    /**
-     * @throws IOException
-     */
     public function merge(string $dir, array $files, string $merge_type, string $prompt = null): KeyValueCollection
     {
         $first_pass = true;
         $Properties = null;
         foreach ($files as $filename) {
-            $CurrentFile = new File($dir, $filename);
-
             if ($first_pass) {
-                $Properties = $this->PropertiesFactory->read_file($CurrentFile);
+                $Properties = $this->PropertiesFactory->read($dir, $filename);
                 $first_pass = false;
 
                 continue;
             }
 
             if (!empty($prompt)) {
-                $CurrentProperties = $this->PropertiesFactory->read_file($CurrentFile);
+                $CurrentProperties = $this->PropertiesFactory->read($dir, $filename);
+
                 $PromptProperties = $this->MergeProperties->merge(
                     $prompt,
                     $Properties,
-                    $CurrentProperties
+                    $CurrentProperties,
                 );
 
                 $properties = $PromptProperties->array();
@@ -73,16 +72,17 @@ class MergePropertiesFactory implements Factory
                 $Properties = $this->MergeProperties->merge(
                     $merge_type,
                     $CurrentProperties,
-                    $PromptProperties
+                    $PromptProperties,
                 );
             } else {
                 $Properties = $this->MergeProperties->merge(
                     $merge_type,
+                    $this->PropertiesFactory->read($dir, $filename),
                     $Properties,
-                    $this->PropertiesFactory->read_file($CurrentFile)
                 );
             }
         }
+
 
         return $Properties;
     }

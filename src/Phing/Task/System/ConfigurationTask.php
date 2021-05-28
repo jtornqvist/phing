@@ -14,16 +14,48 @@ use Phing\Task;
 use Phing\Task\System\Properties\Merge\MergeProperties;
 use Phing\Task\System\Properties\Merge\MergePropertiesFactory;
 use Phing\Task\System\Properties\Merge\MergePropertiesPrioritizeRight;
+use Phing\Task\System\Properties\Merge\PrioritizeRight;
 use Phing\Task\System\Properties\Prompt\ConsolePrompt;
 use Phing\Task\System\Properties\PropertiesFactory;
 use Phing\Task\System\Properties\PropertiesImmutable;
 use Phing\Type\Element\MergeAware;
 
+/**
+ * Merge two or more configuration files (key/value) into one.
+ *
+ * Typical use case is merging (new) settings from
+ * an example configuration file in a repository into
+ * a production configuration file.
+ *
+ * The settings can either be merged automatically using
+ * the values in the example file or "manually" by prompting the user
+ * for a value, using the example file value as default.
+ *
+ * Values in subsequent files will override previous files
+ * when merging.
+ *
+ * Example:
+ * - In this example we're merging two files: example.properties and prod.properties.
+ * - The user is prompted to enter values for the difference (prompt="difference")
+ * between example and prod.
+ * - The result is then merged with prod.properties (type="union").
+ * - The end result is then written to prop.properties after it has been backed up (backup="true").
+ *
+ * <configuration application="MyApplication" outputdir="/tmp" outputfile="prod.properties" backup="true">
+ *   <merge type="union" prompt="difference">
+ *     <filelist dir="/tmp" files="example.properties,prod.properties" />
+ *   </merge>
+ * </configuration>.
+ *
+ * @author Joakim Tärnqvist <jocke@tornqvistarna.se>
+ */
 class ConfigurationTask extends Task
 {
     use MergeAware;
 
     /**
+     * A name identifying this configuration to the user.
+     *
      * @var string
      */
     private $application = 'Application config';
@@ -39,11 +71,16 @@ class ConfigurationTask extends Task
     private $outputfile;
 
     /**
+     * Create a backup of the outpufile.
+     *
      * @var bool
      */
     private $backup = true;
 
     /**
+     * The date format used for the prefix
+     * for the backup file name.
+     *
      * @var string
      */
     private $backupprefixformat = 'Ymd_His_';
@@ -53,11 +90,10 @@ class ConfigurationTask extends Task
      */
     public function main()
     {
-
         $this->log($this->application, Project::MSG_INFO);
 
         $PropertiesFactory = new PropertiesFactory(new IniFileParser());
-        $MergeProperties = new MergePropertiesPrioritizeRight();
+        $MergeProperties = new MergeProperties();
         $ConsolePrompt = new ConsolePrompt($this->project->getInputHandler());
 
         $MergePropertiesFactory = new MergePropertiesFactory(
@@ -86,6 +122,7 @@ class ConfigurationTask extends Task
         }
 
         $Write->write($OutputFile, $Properties->string());
+
     }
 
     public function setApplication(string $application): void

@@ -4,8 +4,12 @@ namespace Phing\Task\System\Properties;
 
 use Phing\Io\File;
 use Phing\Io\FileParserInterface;
-use Phing\Task\System\Properties\Merge\Merge;
 
+/**
+ * Class PropertiesFactory.
+ *
+ * @author Joakim Tärnqvist <jocke@tornqvistarna.se>
+ */
 class PropertiesFactory implements Factory
 {
     /**
@@ -21,6 +25,11 @@ class PropertiesFactory implements Factory
         $this->FileParser = $FileParser;
     }
 
+    public function read($dir, $filename, string $property_delimiter = '=', string $comment_prefix = '#'): KeyValueCollection
+    {
+        return $this->properties($this->FileParser->parseFile(new File($dir, $filename)), $property_delimiter, $comment_prefix);
+    }
+
     public function read_file(File $properties_file, string $property_delimiter = '=', string $comment_prefix = '#'): KeyValueCollection
     {
         return $this->properties($this->FileParser->parseFile($properties_file), $property_delimiter, $comment_prefix);
@@ -34,6 +43,4 @@ class PropertiesFactory implements Factory
 
         return new PropertiesImmutable($properties, $property_delimiter);
     }
-
-
 }

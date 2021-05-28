@@ -8,8 +8,10 @@ use Phing\Task\System\Properties\KeyValueCollection;
  * Class MergePropertiesPrioritizeRight.
  *
  * This property merge strategy will
- * prioritize right properties before
- * left properties when merging.
+ * prioritize right property values
+ * in case of conflicting values.
+ *
+ * @author Joakim Törnqvist <jocke@tornqvistarna.se>
  */
 class MergePropertiesPrioritizeRight implements Merge
 {

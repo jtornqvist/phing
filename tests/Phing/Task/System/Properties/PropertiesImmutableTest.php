@@ -2,7 +2,7 @@
 
 namespace Phing\Test\Task\System\Properties;
 
-use ArrayIterator;
+use InvalidArgumentException;
 use Phing\Task\System\Properties\KeyValue;
 use Phing\Task\System\Properties\PropertiesImmutable;
 use PHPUnit\Framework\TestCase;
@@ -10,9 +10,34 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  * @coversNothing
+ * @author Joakim Tärnqvist <jocke@tornqvistarna.se>
  */
 class PropertiesImmutableTest extends TestCase
 {
+    public function testConstructor()
+    {
+        $Properties = new PropertiesImmutable();
+        $this->assertInstanceOf(PropertiesImmutable::class, $Properties);
+    }
+
+    public function testValidPropertiesInConstructor()
+    {
+        $Property = $this->createMock(KeyValue::class);
+        $Property->method('property')->willReturn('username');
+        $Property->method('value')->willReturn('john');
+        $Property->method('string')->with('=')->willReturn('username=john');
+
+        $Properties = new PropertiesImmutable([$Property]);
+        $this->assertInstanceOf(PropertiesImmutable::class, $Properties);
+
+    }
+
+    public function testInvalidPropertiesInConstructor()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $Properties = new PropertiesImmutable(['key' => 'value']);
+    }
+
     public function testProperties()
     {
         $OldProperties = new PropertiesImmutable();

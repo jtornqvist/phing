@@ -5,6 +5,11 @@ namespace Phing\Task\System\Properties\Prompt;
 use Phing\Input\InputHandler;
 use Phing\Input\InputRequest;
 
+/**
+ * Class ConsolePrompt.
+ *
+ * @author Joakim Törnqvist <jocke@tornqvistarna.se>
+ */
 class ConsolePrompt implements Prompt
 {
     /**
@@ -19,15 +24,12 @@ class ConsolePrompt implements Prompt
 
     /**
      * ConsolePrompt constructor.
-     * @param InputHandler $InputHandler
-     * @param string $prompt_char
      */
     public function __construct(InputHandler $InputHandler, string $prompt_char = ':')
     {
         $this->InputHandler = $InputHandler;
         $this->prompt_char = $prompt_char;
     }
-
 
     public function prompt($message, $default_value): string
     {

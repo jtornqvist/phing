@@ -1,12 +1,12 @@
 <?php
 
-
 namespace Phing\Task\System\Properties;
 
-
+/**
+ * Interface KeyValue.
+ */
 interface KeyValue
 {
-
     public function property(): string;
 
     public function value(): string;

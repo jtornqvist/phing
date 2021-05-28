@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  * @coversNothing
+ *
+ * @author Joakim Tärnqvist <jocke@tornqvistarna.se>
  */
 class MergePropertiesTest extends TestCase
 {
@@ -167,5 +169,4 @@ class MergePropertiesTest extends TestCase
 
         $this->assertEquals($expected, $MergeProperties->key_value_array());
     }
-
 }

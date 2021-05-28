@@ -2,6 +2,11 @@
 
 namespace Phing\Task\System\Properties;
 
+/**
+ * Class Property.
+ *
+ * @author Joakim Tärnqvist <jocke@tornqvistarna.se>
+ */
 class Property implements KeyValue
 {
     /**
@@ -45,7 +50,7 @@ class Property implements KeyValue
         return $this->string('=') === $KeyValue->string('=');
     }
 
-    private function boolean_to_string($value)
+    private function boolean_to_string($value): string
     {
         if (is_bool($value)) {
             if ($value) {
@@ -55,6 +60,10 @@ class Property implements KeyValue
             return 'false';
         }
 
+        if(is_null($value))
+        {
+            return '';
+        }
         return $value;
     }
 }

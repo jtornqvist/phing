@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  * @coversNothing
+ * @author Joakim Tärnqvist <jocke@tornqvistarna.se>
  */
 class PropertyTest extends TestCase
 {

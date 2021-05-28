@@ -4,6 +4,11 @@ namespace Phing\Task\System\Properties;
 
 use ArrayIterator;
 
+/**
+ * Class PropertiesImmutable.
+ *
+ * @author Joakim Tärnqvist <jocke@tornqvistarna.se>
+ */
 class PropertiesImmutable implements KeyValueCollection
 {
     /**
@@ -33,7 +38,6 @@ class PropertiesImmutable implements KeyValueCollection
                 $this->array->offsetSet($object->property(), $object);
             }
         }
-
     }
 
     public function array(): array
@@ -97,5 +101,15 @@ class PropertiesImmutable implements KeyValueCollection
     public function size(): int
     {
         return $this->array->count();
+    }
+
+    public static function instantiate(array $key_value, $value_delimiter): KeyValueCollection
+    {
+        $properties = [];
+        foreach ($key_value as $key => $value) {
+            $properties[$key] = new Property($key, $value);
+        }
+
+        return new PropertiesImmutable($properties, $value_delimiter);
     }
 }
